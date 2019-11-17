@@ -2,6 +2,7 @@ import { GraphQLObjectType, GraphQLSchema } from "graphql";
 // import GraphQLUser from "./user/user.typeDef";
 import { GraphQLUserQueries } from "./user/user.queries";
 import { GraphQLUserMutations } from "./user/user.mutations";
+import { GraphQLTodoMutations } from "./todo/todo.mutations";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQuery",
@@ -13,7 +14,8 @@ const RootQuery = new GraphQLObjectType({
 const RootMutation = new GraphQLObjectType({
   name: "RootMutation",
   fields: {
-    ...GraphQLUserMutations
+    ...GraphQLUserMutations,
+    ...GraphQLTodoMutations
   }
 });
 

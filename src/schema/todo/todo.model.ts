@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
-import { TodoModel } from "./todo.typeDef";
+import { TodoModel } from "./todo.interface";
+import { userSchema } from "../user/user.model";
 
 const todoSchema = new mongoose.Schema(
   {
-    userId: mongoose.model("User"),
+    userId: mongoose.Types.ObjectId, //("User", userSchema),
     title: String,
     completed: Boolean
   },

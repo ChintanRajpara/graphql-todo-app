@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { UserModel } from "./user.typedef";
+import { UserModel } from "./user.interface";
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,4 +14,4 @@ const userSchema = new mongoose.Schema(
 );
 
 const User = mongoose.model<UserModel>("User", userSchema);
-export { User };
+export { User, userSchema };
