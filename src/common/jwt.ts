@@ -16,11 +16,8 @@ class JWTRepository {
   private publicKEY: any;
   private signOptions: any;
   private verifyOptions: any;
-  //   private request: Request;
 
   constructor() {
-    // this.request = request;
-
     this.privateKEY = "abcd1234";
     //  fs.readFileSync(
     //   "../utils/keys/private.key",
@@ -67,29 +64,20 @@ class JWTRepository {
         this.publicKEY,
         // fs.readFileSync("../../utils/public.key", "utf8"),
         this.verifyOptions,
-        (err, { userId }: any) => {
+        (err, data: any) => {
           if (err) {
-            if (err instanceof TokenExpiredError) {
-              console.log("TokenExpiredError");
-            }
-            // else if (err instanceof JsonWebTokenError) {
-            //   console.log("JsonWebTokenError");
+            // if (err instanceof TokenExpiredError) {
+            // } else if (err instanceof JsonWebTokenError) {
+            // } else if (err instanceof NotBeforeError) {
+            // } else {
             // }
-            // else if (err instanceof NotBeforeError) {
-            //   console.log("NotBeforeError");
-            // }
-            // else {
-            //   console.log({ err });
-            // }
+            throw err;
           } else {
-            resolve({ userId });
-            // console.log({ userId });
+            resolve({ userId: data.userId });
           }
         }
       );
     });
-    // console.log({ legit });
-
     return { userId };
   }
 

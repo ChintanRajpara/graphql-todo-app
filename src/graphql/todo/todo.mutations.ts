@@ -1,5 +1,5 @@
-import { mutationWithClientMutationId } from "graphql-relay";
-import { GraphQLString, GraphQLBoolean, GraphQLList } from "graphql";
+import { mutationWithClientMutationId, fromGlobalId } from "graphql-relay";
+import { GraphQLString, GraphQLBoolean, GraphQLList, GraphQLID } from "graphql";
 import { iContext } from "../../serverConfig/context";
 
 const GraphQLCreateTodoMutation = mutationWithClientMutationId({
@@ -13,8 +13,7 @@ const GraphQLCreateTodoMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: async ({ title }, ctx: iContext) => {
     const { userId }: any = await ctx.getUserId();
-    // const userId = "";
-    return await ctx._todoRepositoryInstance.createTodo({ title, userId });
+    return await ctx._todoRepository.createTodo({ title, userId });
   }
 });
 
@@ -31,34 +30,49 @@ const GraphQLEditTodoMutation = mutationWithClientMutationId({
   },
   mutateAndGetPayload: async ({ id, completed, title }, ctx: iContext) => {
     const { userId }: any = await ctx.getUserId();
-    const cedit = completed ? { completed } : {};
+    const cedit = typeof completed === "boolean" ? { completed } : {};
     const tedit = title ? { title } : {};
-    return await ctx._todoRepositoryInstance.editTodo({
-      todoId: id,
+    return await ctx._todoRepository.editTodo({
+      todoId: fromGlobalId(id).id,
       userId,
       edits: { ...cedit, ...tedit }
     });
   }
 });
+
 const GraphQLDeleteCompletedTodosMutation = mutationWithClientMutationId({
   name: "deleteCompletedTodos",
   inputFields: {},
   outputFields: {
     status: { type: GraphQLString },
-    message: { type: GraphQLString },
-    deletedTodoIds: { type: new GraphQLList(GraphQLString) }
+    message: { type: GraphQLString }
   },
-  mutateAndGetPayload: async ({ id, completed, title }, ctx: iContext) => {
+  mutateAndGetPayload: async ({}, ctx: iContext) => {
     const { userId }: any = await ctx.getUserId();
 
-    return await ctx._todoRepositoryInstance.deleteCompletedTodos(userId);
+    return await ctx._todoRepository.deleteCompletedTodos(userId);
+  }
+});
+
+const GraphQLDeleteTodoMutation = mutationWithClientMutationId({
+  name: "deleteTodo",
+  inputFields: { id: { type: GraphQLID } },
+  outputFields: {
+    status: { type: GraphQLString },
+    message: { type: GraphQLString }
+  },
+  mutateAndGetPayload: async ({ id }, ctx: iContext) => {
+    const { userId }: any = await ctx.getUserId();
+
+    return await ctx._todoRepository.deleteTodo(fromGlobalId(id).id, userId);
   }
 });
 
 const GraphQLTodoMutations = {
   createTodo: GraphQLCreateTodoMutation,
   editTodo: GraphQLEditTodoMutation,
-  deleteCompletedTodos: GraphQLDeleteCompletedTodosMutation
+  deleteCompletedTodos: GraphQLDeleteCompletedTodosMutation,
+  deleteTodo: GraphQLDeleteTodoMutation
 };
 
 export { GraphQLTodoMutations };

@@ -22,7 +22,7 @@ const GraphQLRegisterUserMutation = mutationWithClientMutationId({
     { email, password, firstName, lastName },
     ctx: iContext
   ) => {
-    const { message, status } = await ctx._userRepositoryInstance.register({
+    const { message, status } = await ctx._userRepository.register({
       email,
       password,
       firstName,
@@ -44,7 +44,7 @@ const GraphQLLoginUserMutation = mutationWithClientMutationId({
     token: { type: GraphQLString }
   },
   mutateAndGetPayload: async ({ email, password }, ctx: iContext) => {
-    const { message, status, token } = await ctx._userRepositoryInstance.login({
+    const { message, status, token } = await ctx._userRepository.login({
       email,
       password
     });

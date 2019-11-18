@@ -18,11 +18,8 @@ class UserRepository {
   }) {
     const userExists = await User.findOne({ email });
 
-    console.log({ userExists });
-
     if (userExists) {
       return { status: "FAILED", message: "User already exists!" };
-      //   throw new Error("User Already Exists");
     }
 
     const user = new User({
@@ -39,12 +36,9 @@ class UserRepository {
 
   async login({ email, password }: { email: string; password: string }) {
     const user = await User.findOne({ email });
-    console.log({ user });
     if (!user) {
       return { status: "FAILED", message: "User not found!" };
     }
-
-    console.log("compareHash", compareHash(user.password, password));
 
     if (compareHash(user.password, password)) {
       const token = `Bearer ${JWTRepository.getInstance().generateToken(

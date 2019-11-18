@@ -4,25 +4,25 @@ import { UserRepository } from "../repository/user/user.repository";
 import { TodoRepository } from "../repository/todo/todo.repository";
 
 interface iContext {
-  getUserId(): { userId: string } | Error;
-  _userRepositoryInstance: UserRepository;
-  _todoRepositoryInstance: TodoRepository;
+  getUserId(): Promise<{ userId: string } | Error>;
+  _userRepository: UserRepository;
+  _todoRepository: TodoRepository;
 }
 
 class ContextRepository {
   private static instance: ContextRepository;
   private request: Request;
   private response: Response;
-  public _userRepositoryInstance: UserRepository;
-  public _todoRepositoryInstance: TodoRepository;
-  public _JWTRepositoryInstance: JWTRepository;
+  public _userRepository: UserRepository; // = UserRepository.getInstance();
+  public _todoRepository: TodoRepository; // = TodoRepository.getInstance();
+  public _JWTRepository: JWTRepository; // = JWTRepository.getInstance();
 
   constructor({ request, response }: { request: Request; response: Response }) {
     this.request = request;
     this.response = response;
-    this._userRepositoryInstance = UserRepository.getInstance();
-    this._todoRepositoryInstance = TodoRepository.getInstance();
-    this._JWTRepositoryInstance = JWTRepository.getInstance();
+    this._userRepository = UserRepository.getInstance();
+    this._todoRepository = TodoRepository.getInstance();
+    this._JWTRepository = JWTRepository.getInstance();
   }
 
   async getUserId() {
@@ -31,8 +31,7 @@ class ContextRepository {
       throw new Error("No authorization headers found");
     }
     const token = authorization.replace("Bearer ", "");
-    // console.log({ token });
-    const { userId } = await this._JWTRepositoryInstance.verfyToken(token);
+    const { userId } = await this._JWTRepository.verfyToken(token);
     return { userId };
   }
 

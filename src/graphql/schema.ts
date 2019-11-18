@@ -1,5 +1,4 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
-// import GraphQLUser from "./user/user.typeDef";
 import { GraphQLUserQueries } from "./user/user.queries";
 import { GraphQLUserMutations } from "./user/user.mutations";
 import { GraphQLTodoMutations } from "./todo/todo.mutations";

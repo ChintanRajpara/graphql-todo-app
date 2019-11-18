@@ -1,3 +1,4 @@
 export const GLOBAL_ID_TYPES = {
-  User: "User"
+  User: "User",
+  Todo: "Todo"
 };

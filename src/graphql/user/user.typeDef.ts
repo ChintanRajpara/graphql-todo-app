@@ -1,6 +1,7 @@
 import { GraphQLObjectType, GraphQLID, GraphQLString } from "graphql";
 import { globalIdField, toGlobalId } from "graphql-relay";
 import { GLOBAL_ID_TYPES } from "../globalIdTypes";
+import { GraphQLTodoQueries } from "../todo/todo.queries";
 
 const GraphQLUser = new GraphQLObjectType({
   name: "User",
@@ -12,16 +13,7 @@ const GraphQLUser = new GraphQLObjectType({
       }
     },
     name: { type: GraphQLString },
-    todos: {
-      type: new GraphQLObjectType({
-        name: "todos",
-        description: "Todos",
-        fields: () => ({
-          id: { type: GraphQLID },
-          title: { type: GraphQLString }
-        })
-      })
-    }
+    todos: GraphQLTodoQueries.todos
   })
 });
 
